@@ -1,0 +1,42 @@
+<!DOCTYPE html>   
+<head>
+    <title>s3 Display</title>
+</head>
+
+<body onload="display()">
+  
+</body>
+<script>
+    function display(){
+    var link = sessionStorage.getItem("link");
+    var ext = link.slice(-3);
+    if(ext=="png" || ext=="jpg" || ext=="peg"){
+        var x = document.createElement("IMG");
+        x.setAttribute("src",link);
+        x.setAttribute("alt", "Image Doesn't Load");
+        document.body.appendChild(x);
+    }
+    else if(ext=="mp4" || ext=="mkv"){
+        var x = document.createElement("VIDEO");
+        x.setAttribute("width","400");
+        x.setAttribute("src",link);
+        x.controls = true;
+        document.body.appendChild(x);
+    }
+    else if(ext=="pdf"){
+        var y = document.createElement("OBJECT");
+        y.setAttribute("data", link);
+        y.setAttribute("height", "930");
+        y.setAttribute("width", "100%");
+        document.body.appendChild(y);
+    }
+    else if(ext=="ocx"){
+        var y = document.createElement("OBJECT");
+        y.setAttribute("data", link);
+        y.setAttribute("height", "930");
+        y.setAttribute("width", "100%");
+        document.body.appendChild(y);
+    }
+    }
+</script>
+</html>

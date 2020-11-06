@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <input type='email' id="email" name="email">
+        <input type='password' id="pass" name="pass">
+        <input type="button" name="submit"  value="Submit" onclick="auth()">
+    </body>
+    <script>
+        function auth(){
+        var user_id= document.getElementById("email").value;
+        var pass=document.getElementById("pass").value;
+        var data = "{"+"'user_id'"+": "+"'"+user_id+"'"+" , "+"'pass'"+" : "+"'"+pass+"'"+"}";
+        var ajax = new XMLHttpRequest();
+        ajax.open("POST", "https://a4hbewxhi4.execute-api.us-east-1.amazonaws.com/First/authentication");
+        ajax.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var response1 = this.responseText;
+            var response2 = JSON.parse(response1);
+            var role = response2.role;
+            var flag = response2.flag;
+            if(flag==1){
+            console.log(role);
+
+            document.location.href = role;
+            }
+            else{
+                alert("helloooo");
+            }
+        }
+        }
+        ajax.send(data);
+        }
+        function parseTuple(t) {
+            t  = t.toString();
+            var data = t.split(',');
+            return data;
+        }
+    </script>
+</html>

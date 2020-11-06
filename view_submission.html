@@ -1,0 +1,110 @@
+<!DOCTYPE html>   
+<head>
+    <title>Student Assignment upload</title>
+    
+</head>
+<body onload="view_submission()">
+    
+  
+<script>  
+    
+    var assignment_id = sessionStorage.getItem("assignment_id");
+
+function view_submission(){
+    var url = new URL("https://0f0q4f7ygf.execute-api.us-east-1.amazonaws.com/demo1/view-submission");
+        const XHR = new XMLHttpRequest();
+        XHR.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var response1 = this.responseText;
+            var response2 = JSON.parse(response1);
+            var record = parseTuple(response2.record);
+            display_files(record);
+        }
+        }
+        url.searchParams.append('assignment_id',assignment_id);
+        XHR.open( 'GET', url);
+        XHR.send();
+}
+
+function parseTuple(t) {
+            t  = t.toString();
+            var data = t.split(',');
+            return data;
+        }
+
+function display_files(record){
+          var x = document.createElement("TABLE");
+          x.setAttribute("id", "file");
+          x.setAttribute("border", "1");
+          document.body.appendChild(x);
+
+          var y = document.createElement("TR");
+          y.setAttribute("id", "myTR");
+          document.getElementById("file").appendChild(y);
+
+        var z = document.createElement("TH");
+         var t = document.createTextNode("Student ID");
+        z.appendChild(t);
+          document.getElementById("myTR").appendChild(z);
+
+          var z = document.createElement("TH");
+         var t = document.createTextNode("Filename");
+        z.appendChild(t);
+          document.getElementById("myTR").appendChild(z);
+
+          var a = document.createElement("TH");
+          var t = document.createTextNode("Action");
+          a.appendChild(t);
+         document.getElementById("myTR").appendChild(a);
+
+         for(var i=0; i<record.length ; i+=4){
+            if(record[i] != ""){
+              var y = document.createElement("TR");
+              y.setAttribute("id", record[i]);
+              document.getElementById("file").appendChild(y);
+
+             var z = document.createElement("TD");
+            var t = document.createTextNode(record[i+1]);
+            z.appendChild(t);
+            document.getElementById(record[i]).appendChild(z);
+
+            var z = document.createElement("TD");
+            var t = document.createTextNode(record[i+2]);
+            z.appendChild(t);
+            document.getElementById(record[i]).appendChild(z);
+
+            var z = document.createElement("TD");
+            var x = document.createElement("BUTTON");
+            x.setAttribute("id", "s3");
+            var t = document.createTextNode("VIEW");
+            x.setAttribute("onclick", "view_file(\'"+record[i+3]+"\')");
+            x.appendChild(t);
+            z.appendChild(x);
+            document.getElementById(record[i]).appendChild(z);
+                
+            }
+        }
+}
+
+function delete_file(id){
+        var url = new URL("https://0f0q4f7ygf.execute-api.us-east-1.amazonaws.com/demo1/delete-assignment-file");
+        const XHR = new XMLHttpRequest();
+        XHR.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+          location.reload(); 
+        }
+        }
+        url.searchParams.append('row_id',id);
+        XHR.open( 'GET', url);
+        XHR.send();
+       
+}
+function view_file(link){
+  sessionStorage.setItem("link",link);
+  document.location.href = "Display_s3.html";
+}
+
+</script>   
+
+</body>
+</html>

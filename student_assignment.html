@@ -1,0 +1,127 @@
+<!DOCTYPE html>   
+<head>
+    <title>VIEW ASSIGNMENT</title>
+</head>
+<script>
+      var sem = sessionStorage.getItem("sem");
+      var branch = sessionStorage.getItem("branch");
+      var subject = sessionStorage.getItem("subject");
+</script>
+<body onload="get_assignments()">
+    
+</body>
+<script>
+    function get_assignments(){
+        var url = new URL("https://0f0q4f7ygf.execute-api.us-east-1.amazonaws.com/demo1/display-assignments");
+        const XHR = new XMLHttpRequest();
+        XHR.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            var response1 = this.responseText;
+            var response2 = JSON.parse(response1);
+            var record = parseTuple(response2.record);
+            display_assignments(record);
+        }
+        }
+        url.searchParams.append('sem',sem);
+        url.searchParams.append('branch',branch);
+        url.searchParams.append('subject',subject);
+        XHR.open( 'GET', url);
+        XHR.send();
+    }
+
+    function parseTuple(t) {
+            t  = t.toString();
+            var data = t.split(',');
+            return data;
+        }
+
+    function display_assignments(record)
+    {
+
+        var x = document.createElement("TABLE");
+          x.setAttribute("id", "assignment");
+          x.setAttribute("border", "1");
+          document.body.appendChild(x);
+
+          var y = document.createElement("TR");
+          y.setAttribute("id", "myTR");
+          document.getElementById("assignment").appendChild(y);
+
+        var z = document.createElement("TH");
+         var t = document.createTextNode("Title");
+        z.appendChild(t);
+          document.getElementById("myTR").appendChild(z);
+
+          var z = document.createElement("TH");
+         var t = document.createTextNode("Detail");
+        z.appendChild(t);
+          document.getElementById("myTR").appendChild(z);
+
+          var z = document.createElement("TH");
+         var t = document.createTextNode("Filename");
+        z.appendChild(t);
+          document.getElementById("myTR").appendChild(z);
+
+          var a = document.createElement("TH");
+          a.setAttribute("colspan", "3");
+          var t = document.createTextNode("Action");
+          a.appendChild(t);
+         document.getElementById("myTR").appendChild(a);
+
+         for(var i=0; i<record.length ; i+=5){
+            if(record[i] != ""){
+              var y = document.createElement("TR");
+              y.setAttribute("id", record[i]);
+              document.getElementById("assignment").appendChild(y);
+
+             var z = document.createElement("TD");
+            var t = document.createTextNode(record[i+1]);
+            z.appendChild(t);
+            document.getElementById(record[i]).appendChild(z);
+
+            var z = document.createElement("TD");
+            var t = document.createTextNode(record[i+2]);
+            z.appendChild(t);
+            document.getElementById(record[i]).appendChild(z);
+
+            var z = document.createElement("TD");
+            var t = document.createTextNode(record[i+3]);
+            z.appendChild(t);
+            document.getElementById(record[i]).appendChild(z);
+
+            var z = document.createElement("TD");
+            var x = document.createElement("BUTTON");
+            x.setAttribute("id", "s3");
+            var t = document.createTextNode("VIEW");
+            x.setAttribute("onclick", "view_file(\'"+record[i+4]+"\')");
+            x.appendChild(t);
+            z.appendChild(x);
+
+            
+            var a = document.createElement("BUTTON");
+            a.setAttribute("id", "s3");
+            var c = document.createTextNode("SUBMIT");
+            a.setAttribute("onclick", "Submit(\'"+record[i]+"\')");
+            a.appendChild(c);
+            z.appendChild(a);
+
+            
+            document.getElementById(record[i]).appendChild(z);
+                
+            }
+        }
+
+    }
+
+    function view_file(link){
+  sessionStorage.setItem("link",link);
+  document.location.href = "Display_s3.html";
+}
+function Submit(record){
+    sessionStorage.setItem("SID", record);
+    document.location.href = "submit_assignment.html";
+}
+
+
+</script>
+</html>
